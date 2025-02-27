@@ -5,19 +5,67 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Shruti - Portfolio</title>
     <style>
-        body { font-family: Arial, sans-serif; text-align: center; margin: 0; padding: 20px;background-color: #fff6f0; }
-        h1 { color: #333; }
-        .container { max-width: 800px; margin: auto; }
+        body { font-family: Arial, sans-serif; text-align: center; margin: 0; padding: 20px; background-color: #ffe6e6; }
+        h1 { color: #ff6600; }
+        .container { max-width: 900px; margin: auto; }
         .projects { text-align: left; }
-        a { text-decoration: none; color: #ff00b2; }
+        a { text-decoration: none; color: #ff0080; }
+
+        .shruti-project-sec .project-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: space-between;
+        }
+
+        .shruti-project-sec .project-card {
+            text-align: center;
+            padding: 20px;
+            border-radius: 15px;
+            width: 42%;
+            min-width: 300px;
+            background: linear-gradient(135deg, #ff66b2, #ff9966);
+            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s;
+        }
+
+        .shruti-project-sec .project-card:hover {
+            transform: scale(1.05);
+        }
+
+        .shruti-project-sec .project-heading {
+            color: #ffffff;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .shruti-project-sec .project-des {
+            height: auto;
+            color: #fff;
+        }
+
+        .shruti-project-sec .project-card a {
+            color: #fff;
+            font-weight: bold;
+        }
+
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Hello, I'm <span style="color: #ff00b2;">SHRUTI SHARMA</span> 👋</h1>
+        <h1>Hello, I'm <span style="color: #ff0080;">SHRUTI SHARMA</span> 👋</h1>
         <p>I'm a Full Stack Java Developer with experience in Java, Spring Boot, JavaScript, and more.</p>
 
-        <h2>Projects</h2>
+        <section class="shruti-project-sec">
+            <div class="container">
+                <h2 class="main-heading">GitHub Projects</h2>
+                <div class="project-row" id="github-projects">
+                    <!-- GitHub projects will be inserted here dynamically -->
+                </div>
+            </div>
+        </section>
+
+        <h2>Real Projects</h2>
         <div class="projects">
             <ul>
                 <li><a href="https://www.ebooktrip.com/" target="_blank">eBookTrip</a> - Online Travel Booking System</li>
@@ -27,7 +75,40 @@
         </div>
 
         <h2>Contact</h2>
-        <p> Email: <a href="mailto:shruti.bhrwj@gmail.com?subject=Lets%20Connect" target="_blank">shruti.bhrwj@gmail.com </a>| <a href="https://github.com/shruti-bhrdwj" target="_blank">GitHub</a></p>
+        <p>Email: <a href="mailto:shruti.bhrwj@gmail.com?subject=Lets%20Connect" target="_blank">shruti.bhrwj@gmail.com</a> |
+        <a href="https://github.com/shruti-bhrdwj" target="_blank">GitHub</a></p>
     </div>
+
+    <script>
+        async function fetchGitHubRepos() {
+            const username = "shruti-bhrdwj";
+            const url = `https://api.github.com/users/${username}/repos`;
+
+            try {
+                const response = await fetch(url);
+                const repos = await response.json();
+                const projectContainer = document.getElementById("github-projects");
+                const hiddenRepos = ["Interview-prep","JavaPatternsQuestions","LockedME"]
+                repos.forEach(repo => {
+                    if (repo.language && repo.language !== "HTML" && !hiddenRepos.includes(repo.name)) {
+                        const projectCard = document.createElement("div");
+                        projectCard.classList.add("project-card");
+                        projectCard.innerHTML = `
+                            <p class="seccol-heading project-heading">${repo.name}</p>
+                            <p>🛠 Language: ${repo.language}</p>
+                            <p class="project-des">${repo.description || "No description available."}</p>
+                            <a href="${repo.html_url}" target="_blank">View on GitHub</a>
+                        `;
+                        projectContainer.appendChild(projectCard);
+                    }
+                });
+
+            } catch (error) {
+                console.error("Error fetching GitHub repositories:", error);
+            }
+        }
+
+        fetchGitHubRepos();
+    </script>
 </body>
 </html>
